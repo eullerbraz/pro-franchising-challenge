@@ -7,7 +7,7 @@ const router = express.Router({ mergeParams: true });
 
 router.get('/', rescue(IngredientController.getAll));
 router.post('/', rescue(IngredientController.create));
-router.get('/:id', rescue(IngredientController.update));
+router.get('/:id', rescue(IngredientController.findById));
 router.put('/:id', rescue(IngredientController.update));
 router.delete('/:id', rescue(IngredientController.remove));
 

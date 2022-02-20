@@ -36,7 +36,7 @@ const findById = async (id) => {
 }
 
 const update = async (id, ingredient) => {
-  const { error } = validateIngredient({ ...ingredient, createDate: new Date()});
+  const { error } = validateIngredient({ ...ingredient });
 
   if (error) {
     const [{ message }] = error.details;
