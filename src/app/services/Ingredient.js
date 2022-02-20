@@ -24,7 +24,7 @@ const create = async (ingredient) => {
 
   const created = await IngredientModel.create(ingredient);
 
-  return created
+  return { ingredient: created }
 }
 
 const findById = async (id) => {
@@ -32,7 +32,7 @@ const findById = async (id) => {
 
   if (!found) return { message: 'Invalid id', code: 400 }
 
-  return found 
+  return { ingredient: found} 
 }
 
 const update = async (id, ingredient) => {
@@ -47,7 +47,7 @@ const update = async (id, ingredient) => {
 
   if (!updated) return { message: 'Invalid id', code: 400 }
 
-  return updated 
+  return { ingredient: updated } 
 }
 
 const remove = async (id) => {
@@ -55,7 +55,7 @@ const remove = async (id) => {
 
   if (!deleted) return { message: 'Invalid id', code: 400 }
 
-  return deleted
+  return { ingredient: deleted }
 }
 
 module.exports = {
