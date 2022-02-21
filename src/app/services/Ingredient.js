@@ -28,7 +28,7 @@ const create = async (ingredient) => {
 }
 
 const findById = async (id) => {
-  const found = await IngredientModel.findByIdAndUpdate(id);
+  const found = await IngredientModel.findById(id);
 
   if (!found) return { message: 'Invalid id', code: 400 }
 

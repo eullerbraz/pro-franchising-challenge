@@ -40,7 +40,7 @@ const create = async (component) => {
 }
 
 const findById = async (id) => {
-  const found = await ComponentModel.findByIdAndUpdate(id);
+  const found = await ComponentModel.findById(id);
 
   if (!found) return { message: 'Invalid id', code: 400 }
 
