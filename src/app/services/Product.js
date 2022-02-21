@@ -75,7 +75,28 @@ const update = async (id, product) => {
 
   const updated = await ProductModel.findByIdAndUpdate(id, product, { new: true });
 
-  if (!updated) return { message: 'Invalid id', code: 400 }
+  if (!updated) return { message: 'Invalid id', code: 400 };
+
+
+  const { components } = updated;
+
+  await Promise.all(
+    components
+    .map(async ({ ingredient, quantity }) => {
+      await ComponentModel.findOneAndUpdate(
+        { ingredient, quantity },
+        { ingredient, quantity },
+        { upsert: true },
+      );
+
+      await IngredientModel
+      .findOneAndUpdate(
+        { name: ingredient.name },
+        { name: ingredient.name, measure: ingredient.measure, unitPrice: ingredient.unitPrice },
+        { upsert: true },
+      );
+    })
+  );
 
   return { product: updated } 
 }
