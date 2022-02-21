@@ -109,10 +109,21 @@ const remove = async (id) => {
   return { component: deleted }
 }
 
+const addImage = async (id, imageName) => {
+  const image = `localhost:3000/src/uploads/${imageName}`;
+
+  const updated = await ProductModel.findByIdAndUpdate(id, { image }, { new: true });
+
+  if (!updated) return { message: 'Invalid id', code: 400 };
+
+  return { product: updated } 
+}
+
 module.exports = {
   getAll,
   create,
   findById,
   update,
   remove,
+  addImage,
 }

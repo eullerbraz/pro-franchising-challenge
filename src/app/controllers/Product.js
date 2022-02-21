@@ -41,10 +41,24 @@ const remove = async (req, res, next) => {
   return res.status(200).json(product);
 }
 
+
+const addImage = async (req, res, next) => {
+  const { filename } = req.file;
+  const { id } = req.params;
+
+  const { code, message, product } = await ProductService
+    .addImage(id, filename);
+
+  if (message) return next({ message, code });
+
+  return res.status(200).json(product);
+}
+
 module.exports = {
   getAll,
   create,
   findById,
   update,
   remove,
+  addImage,
 }
