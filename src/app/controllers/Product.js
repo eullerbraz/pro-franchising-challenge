@@ -16,7 +16,7 @@ const create = async (req, res, next) => {
 
 const findById = async (req, res, next) => {
   const { id } = req.params;
-  const {code, message, product} = await ProductService.findById(id, req.body);
+  const {code, message, product} = await ProductService.findById(id);
 
   if (message) return next({ message, code });
 
@@ -54,6 +54,15 @@ const addImage = async (req, res, next) => {
   return res.status(200).json(product);
 }
 
+const verifyCanBeSell = async (req, res, next) => {
+  const { id } = req.params;
+  const {code, message, response} = await ProductService.verifyCanBeSell(id);
+
+  if (message) return next({ message, code });
+
+  return res.status(200).json({ response });
+}
+
 module.exports = {
   getAll,
   create,
@@ -61,4 +70,5 @@ module.exports = {
   update,
   remove,
   addImage,
+  verifyCanBeSell,
 }

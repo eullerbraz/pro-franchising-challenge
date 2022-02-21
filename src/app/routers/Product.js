@@ -12,5 +12,6 @@ router.get('/:id', rescue(ProductController.findById));
 router.put('/:id', rescue(ProductController.update));
 router.delete('/:id', rescue(ProductController.remove));
 router.patch('/:id/image', upload, rescue(ProductController.addImage));
+router.get('/:id/verify', rescue(ProductController.verifyCanBeSell));
 
 module.exports = router;

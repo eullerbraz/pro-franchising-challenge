@@ -3,6 +3,7 @@ const Joi = require('joi');
 const ProductModel = require('../models/Product');
 const ComponentModel = require('../models/Component');
 const IngredientModel = require('../models/Ingredient');
+const InventoryModel = require('../models/Inventory');
 
 const validateProduct = (product) => Joi.object({
   name: Joi.string().not().empty().required(),
@@ -119,6 +120,23 @@ const addImage = async (id, imageName) => {
   return { product: updated } 
 }
 
+const verifyCanBeSell = async (id) => {
+  const productFound = await ProductModel.findById(id);
+  const inventory = await InventoryModel.find({});
+
+  if (!productFound) return { message: 'Invalid id', code: 400 }
+
+  const allCanBeSell = productFound.components.reduce((acc, component) => {
+    const canBeSell = inventory
+      .some((item) => item.ingredient.name === component.ingredient.name &&
+        item.quantity >= component.quantity
+      );
+    return acc && canBeSell;
+  }, true)
+
+  return { response: allCanBeSell } 
+}
+
 module.exports = {
   getAll,
   create,
@@ -126,4 +144,5 @@ module.exports = {
   update,
   remove,
   addImage,
+  verifyCanBeSell,
 }
