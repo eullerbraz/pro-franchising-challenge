@@ -8,7 +8,6 @@ const InventoryModel = require('../models/Inventory');
 const validateProduct = (product) => Joi.object({
   name: Joi.string().not().empty().required(),
   image: Joi.string().not().empty(),
-  price: Joi.number().required(),
   components: Joi.array().items({
     ingredient: Joi.object({
       name: Joi.string().not().empty().required(),
@@ -18,6 +17,15 @@ const validateProduct = (product) => Joi.object({
     quantity: Joi.number().integer().required(),
   }).required(),
 }).validate(product);
+
+const getPrice = (product) => {
+  const price =  product.components.reduce((acc, { ingredient, quantity }) => {
+    const componentPrice = ingredient.unitPrice * quantity;
+    return acc + componentPrice;
+  }, 0);
+  return (Math.round(price * 100) / 100)
+  .toFixed(2)
+}
 
 const getAll = async () => {
   const products = await ProductModel.find({});
@@ -33,7 +41,9 @@ const create = async (product) => {
     return { message, code: 400 };
   }
 
-  const created = await ProductModel.create(product);
+  const price = getPrice(product);
+
+  const created = await ProductModel.create({ ...product, price });
 
   const { components } = created;
 
@@ -74,7 +84,9 @@ const update = async (id, product) => {
     return { message, code: 400 };
   }
 
-  const updated = await ProductModel.findByIdAndUpdate(id, product, { new: true });
+  const price = getPrice(product);
+
+  const updated = await ProductModel.findByIdAndUpdate(id, { ...product, price }, { new: true });
 
   if (!updated) return { message: 'Invalid id', code: 400 };
 
